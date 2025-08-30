@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Radio Player</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #111;
+      color: #eee;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 1rem;
+    }
+    h2 {
+      color: #00ffcc;
+      margin-bottom: 1rem;
+    }
+    #player {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16 / 9;
+      margin: 0 auto 1rem;
+    }
+    #song-title {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    .controls button {
+      padding: 8px 16px;
+      margin: 0 5px;
+      background-color: #00ffcc;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .controls button:hover {
+      background-color: #00bba1;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎧 Impulse Radio: Enjoy!</h2>
+  <div id="player"></div>
+  <p id="song-title">Loading...</p>
+  <div class="controls">
+    <button onclick="playRadio()">▶️ Play</button>
+    <button onclick="pauseRadio()">⏸️ Pause</button>
+  </div>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let player;
+    const playlistId = "PLWnBX0w5al5mcWKT9IStnp5IavoHVXC_j";
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        playerVars: {
+          listType: 'playlist',
+          list: playlistId,
+          controls: 1, // ← Show controls now
+          modestbranding: 1,
+          rel: 0,
+          showinfo: 0
+        },
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      updateSongTitle();
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        updateSongTitle();
+      }
+    }
+
+    function updateSongTitle() {
+      const data = player.getVideoData();
+      document.getElementById("song-title").textContent = `Now Playing: ${data.title}`;
+    }
+
+    function playRadio() {
+      player.playVideo();
+    }
+
+    function pauseRadio() {
+      player.pauseVideo();
+    }
+  </script>
+</body>
+</html>
